@@ -50,12 +50,8 @@ p{
 
 .buttons{
   margin-top:25px;
-  height:100px;
+  height:140px;
   position:relative;
-  display:flex;
-  gap:15px;
-  justify-content:center;
-  flex-wrap:wrap;
 }
 
 button{
@@ -64,14 +60,21 @@ button{
   font-size:16px;
   border-radius:12px;
   cursor:pointer;
+  position:absolute;
   transition:0.2s ease;
-  background:#c8a84d;
-  color:white;
 }
 
-button:hover{
-  transform:scale(1.05);
-  box-shadow:0 5px 15px rgba(200,168,77,0.3);
+#yes{
+  background:#c8a84d;
+  color:white;
+  left:20%;
+  top:20px;
+}
+
+#no{
+  background:#e9e9e9;
+  left:55%;
+  top:20px;
 }
 
 #msg{
@@ -93,20 +96,14 @@ button:hover{
   padding-top:15px;
   border-top:1px solid #f0f0f0;
 }
-
-.song-credit{
-  font-size:10px;
-  color:#bbb;
-  margin-top:8px;
-}
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 Intentions by FAVE -->
+<!-- 🎵 Nigerian party vibe audio -->
 <audio id="music" loop crossorigin="anonymous">
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
@@ -120,18 +117,14 @@ button:hover{
   <p><strong>Will you be my bridesmaid?</strong></p>
 
   <div class="buttons">
-    <button id="yes1">YES 🤍</button>
-    <button id="yes2">YES 💛</button>
+    <button id="yes">YES 🤍</button>
+    <button id="no">NO</button>
   </div>
 
   <div id="msg"></div>
 
   <div class="music-note">
     (turn volume up 🎶)
-  </div>
-
-  <div class="song-credit">
-    🎵 Intentions - FAVE
   </div>
 
   <div class="disclaimer">
@@ -143,9 +136,11 @@ button:hover{
 
 const music = document.getElementById("music");
 
-const yes1Btn = document.getElementById("yes1");
-const yes2Btn = document.getElementById("yes2");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
 const msg = document.getElementById("msg");
+
+let count = 0;
 
 // 🎵 Start music after first interaction (browser requirement)
 function startMusic(){
@@ -167,8 +162,8 @@ function startMusic(){
 }
 document.addEventListener("click", startMusic);
 
-// YES action for both buttons
-function handleYes(){
+// YES action
+yesBtn.addEventListener("click", () => {
   music.volume = 0.8;
 
   document.body.innerHTML = `
@@ -180,10 +175,42 @@ function handleYes(){
       </div>
     </div>
   `;
+});
+
+// NO runaway logic
+noBtn.addEventListener("mouseenter", moveButton);
+
+function moveButton(){
+  const card = document.querySelector(".card");
+
+  const maxX = card.clientWidth - noBtn.offsetWidth - 20;
+  const maxY = 100;
+
+  const randomX = Math.floor(Math.random() * maxX);
+  const randomY = Math.floor(Math.random() * maxY) + 90;
+
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
 }
 
-yes1Btn.addEventListener("click", handleYes);
-yes2Btn.addEventListener("click", handleYes);
+// click fallback jokes
+noBtn.addEventListener("click", () => {
+  count++;
+
+  if(count === 1){
+    noBtn.innerText = "Nice try 😂";
+    msg.innerText = "Music says otherwise 🎶";
+  }
+  else if(count === 2){
+    noBtn.innerText = "Wrong button 🤨";
+    yesBtn.style.transform = "scale(1.2)";
+  }
+  else{
+    noBtn.style.display = "none";
+    msg.innerText = "Only one correct answer 😌";
+    yesBtn.style.transform = "scale(1.4)";
+  }
+});
 
 </script>
 
