@@ -84,9 +84,10 @@ button{
 <body>
 
 <!-- 🎵 Nigerian party vibe audio -->
-<audio id="music" loop>
-  <!-- Replace this link if you want a specific song -->
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d0b8f8c6c3.mp3?filename=african-party-hip-hop-110793.mp3" type="audio/mp3">
+<audio id="music" loop crossorigin="anonymous">
+  <!-- Multiple sources for better compatibility -->
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
 </audio>
 
 <div class="card">
@@ -123,7 +124,19 @@ let count = 0;
 // 🎵 Start music after first interaction (browser requirement)
 function startMusic(){
   music.volume = 0.5;
-  music.play().catch(()=>{});
+  
+  const playPromise = music.play();
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        console.log("Music playing!");
+      })
+      .catch((error) => {
+        console.log("Music autoplay prevented:", error);
+        msg.innerText = "Click to play music 🎶";
+      });
+  }
+  
   document.removeEventListener("click", startMusic);
 }
 document.addEventListener("click", startMusic);
